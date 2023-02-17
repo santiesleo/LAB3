@@ -26,7 +26,7 @@ public class CircularList {
 
     //Pasar turno
     public void passTurn(Node current){
-        if(current == null){
+        if(current == head){
             return;
         }if(current.getClient() != null){
             if(current.getNext() != current){
