@@ -46,15 +46,21 @@ public class CircularList {
     }
 
     //Mostrar turno - método de activación
-    public void showTurn(){showTurn(head);}
-
-    //Mostrar turno - método recursivo
-    public void showTurn(Node current){
-        if(current == null){
+    public void showTurn() {
+        if (head == null) {
             System.out.println("No hay turnos");
-            return;
-        } else if (current.getClient() != null) {
+        } else {
+            showTurn(head);
+        }
+    }
+
+    public void showTurn(Node current) {
+        if (current.getClient() != null) {
             System.out.println(current.getName() + "*");
+            return;
+        }
+        System.out.println(current.getName());
+        if (current.getNext() == head) {
             return;
         }
         showTurn(current.getNext());
@@ -104,9 +110,9 @@ public class CircularList {
             }
             return;
         }
-        if(current.getNext() == head){
-            return;
+        if(current.getNext() != head){
+            delete(current.getNext());
         }
-        delete(current.getNext());
+
     }
 }
