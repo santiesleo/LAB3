@@ -9,26 +9,20 @@ public class Main {
         int turn = 0;
         boolean flag = false;
         while (!flag){
+            System.out.println("");
             System.out.println("1. Dar turno. \n2. Mostrar turno actual. \n3. Pasar turno. \n4. Seguir. \nIngrese una opción: ");
             int option = sc.nextInt();
             if(option == 1){
                 turn++;
-                Client client = new Client(String.valueOf(turn));
-                lista.addNode(new Node(String.valueOf(turn)));
-                if(turn == 1){
-                    lista.addClient(client);
-                }
-
+                lista.addNode(new Node(turn));
             }else if(option == 2){
-                lista.showTurn();
-
+                lista.currentTurn();
             } else if (option == 3) {
-                lista.passTurn();
+                lista.skipTurn();
 
             }else if(option == 4){
-                lista.delete();
+                lista.deleteTurn();
             }
-            lista.print();
         }
 
 

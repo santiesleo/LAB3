@@ -1,38 +1,28 @@
 public class Node {
-    private String name;
+
+    private int name;
+    private int skip;
     private Node next;
     private Node previous;
 
-    private Client client;
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    private int passTurn;
-
-    public int getPassTurn() {
-        return passTurn;
-    }
-
-    public void setPassTurn(int passTurn) {
-        this.passTurn = passTurn;
-    }
-
-    public Node(String name) {
+    public Node(int name) {
         this.name = name;
     }
 
-    public String getName() {
+    public int getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void getName(int number) {
+        this.name = number;
+    }
+
+    public int getSkip() {
+        return skip;
+    }
+
+    public void setSkip(int skip) {
+        this.skip = skip;
     }
 
     public Node getNext() {

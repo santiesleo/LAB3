@@ -1,118 +1,87 @@
 public class CircularList {
 
     private Node head;
+    private Node client;
 
-    public void addNode(Node node){
-        if(head == null){ //Caso cuando no hay ningún nodo creado
-            head = node; //Referenciamos el nodo a la cabeza
-            head.setNext(head); //Enlazamos el siguiente nodo a la cabeza, ya que solo hay un nodo, entonces sería él mismo
-            head.setPrevious(head); //Enlazamos el anterior no a la cabeza, ya que solo hay un nodo, entonces sería él mismo
-        }else{ //Caso cuando la cabeza ya está creada
-            Node tail = head.getPrevious(); //Creamos una cola, que va a ser el que está antes de la cabeza
-            node.setNext(head); //Enlazamos el next del nodo nuevo a la cabeza
-            head.setPrevious(node); //Enlazamos el previous de la cabeza al nuevo nodo
-            tail.setNext(node); //Enlazamos el next de la cola a la cabeza
-            node.setPrevious(tail); //Enlazamos el previo del nodo nuevo a la cola
+    //Añadir nodo
+    public void addNode(Node node) {
+        if (head == null) {
+            head = node;
+            client = node;
+            head.setNext(head);
+            head.setPrevious(head);
+        } else {
+            Node tail = head.getPrevious();
+            node.setNext(head);
+            head.setPrevious(node);
+            tail.setNext(node);
+            node.setPrevious(tail);
         }
     }
 
-    //Referenciar al cliente
-    public void addClient(Client client){head.setClient(client);}
-
-    //Pasar turno
-    public void passTurn(){
-        passTurn(head);
-    }
-
-    //Pasar turno
-    public void passTurn(Node current){
-        if(current == head){
-            return;
-        }if(current.getClient() != null){
-            if(current.getNext() != current){
-                Client client = current.getClient();
-                current.getNext().setClient(client);
-                current.setClient(null);
-                current.setPassTurn(+1);
-            }else {
-                current.setPassTurn(+1);
-            }
-            if(current.getPassTurn() == 3){
-                delete();
-            }
-            return;
-        }
-        passTurn(current.getNext());
-    }
-
-    //Mostrar turno - método de activación
-    public void showTurn() {
+    //Turno actual
+    public void currentTurn() {
         if (head == null) {
             System.out.println("No hay turnos");
         } else {
-            showTurn(head);
+            System.out.println(client.getName());
         }
     }
 
-    public void showTurn(Node current) {
-        if (current.getClient() != null) {
-            System.out.println(current.getName() + "*");
-            return;
-        }
-        System.out.println(current.getName());
-        if (current.getNext() == head) {
-            return;
-        }
-        showTurn(current.getNext());
-    }
-
-    //Método de activación
-    public void print(){
-        if(head == null){
+    //Activación desde el main
+    public void deleteTurn() {
+        if (head == null) {
             System.out.println("No hay turnos");
-        }else{
-            print(head);
+        } else {
+            client = client.getNext();
+            delete(client.getPrevious().getName());
         }
     }
 
-    //Método recursivo
-    private void print(Node current){
-        if(current == head.getPrevious()){
-            System.out.print("[" +current.getName() + "]\n");
-            return;
-        }
-        System.out.print("[" +current.getName() + "]");
-        print(current.getNext());
-    }
-
-    public void delete(){
-        if(head == null){
+    //Activación de recursividad
+    public void delete(int goal) {
+        if (head == null) {
             System.out.println("No hay turnos");
-        } else if (head == head.getNext()) { //Caso cuando solo haya un nodo
+        } else {
+            delete(head, goal);
+        }
+    }
+
+    private void delete(Node current, int goal) {
+        if (head.getNext().equals(head)) {
+            head.setNext(null);
+            head.setPrevious(null);
             head = null;
-        } else{
-            delete(head);
-        }
-    }
-
-    private void delete(Node current){
-        if(current.getClient() != null){
-            if(current == head){ //Caso cuando el nodo a eliminar sea la cabeza
-                head.getPrevious().setNext(head.getNext());
-                head.getNext().setPrevious(head.getPrevious());
-                head = head.getNext();
-            }else{ //Cualquier otro caso
-                Node prev = current.getPrevious();
-                Node next = current.getNext();
-                prev.setNext(next);
-                next.setPrevious(prev);
-                next.setClient(current.getClient());
-            }
+            client = null;
             return;
         }
-        if(current.getNext() != head){
-            delete(current.getNext());
+        if (head.getName() == goal) {
+            client = head.getNext();
+            head.getNext().setPrevious(head.getPrevious());
+            head.getPrevious().setNext(head.getNext());
+            head = head.getNext();
+            return;
         }
+        if (current.getName() == goal) {
+            current.getPrevious().setNext(current.getNext());
+            current.getNext().setPrevious(current.getPrevious());
+            client = current.getNext();
+            return;
+        }
+        delete(current.getNext(), goal);
+    }
 
+
+    //Pasar turno
+    public void skipTurn() {
+        if (head == null) {
+            System.out.println("No hay turnos");
+        } else if (client.getSkip() == 3) {
+            client = client.getNext();
+            delete(client.getPrevious().getName());
+        } else {
+            client.setSkip(client.getSkip() + 1);
+            client = client.getNext();
+        }
     }
 }
